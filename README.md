@@ -17,7 +17,7 @@
 
 <br /><br />
 ## What does your app do?
-Deductify is an application designed to simplify expense tracking for contractors by allowing them to upload receipt images through the Pinata API. Whether you're a driver for Uber or DoorDash, a sales representative handling client expenses, or someone working from home managing internet costs, Deductify offers a seamless solution for managing receipts and deductions. The application streamlines the process of uploading, organizing, and securely storing receipts, making it easier for contractors to keep track of their expenses and ensure they're ready for tax season.
+Deductify is an application designed to simplify expense tracking for contractors by allowing them to upload receipt images through the Pinata API. Whether you're a driver for Uber or DoorDash, a sales representative handling client expenses, or perhaps a small business owner, Deductify offers a seamless solution for managing receipts and deductions. The application streamlines the process of uploading, organizing, and securely storing receipts, making it easier for contractors to keep track of their expenses and ensure they're ready for tax season.
 
 <br /><br />
 
