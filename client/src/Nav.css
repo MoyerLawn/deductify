@@ -20,47 +20,65 @@
   list-style: none;
   padding: 0;
   margin-left: auto;
-  margin-right: 2rem;
-  margin-top: -2rem;
+  margin-right: 5rem;
+  margin-top: -1rem;
 }
 
-.nav-list li a {
-  color: green !important;
-  text-decoration: none;
-}
-
-.nav-list li a:hover {
-  color: gold !important;
-}
-
-.nav-list li a.active {
-  color: gold !important;
-}
-
-.main-nav li {
+.nav-list li {
+  position: relative;
   margin-left: 4rem;
 }
 
+.nav-list li a {
+  color: green;
+  text-decoration: none;
+}
+
+.active {
+  display: flex !important;
+}
+
+.nav-list li a:hover {
+  color: gold;
+}
+
+.nav-list li a.active {
+  color: green;
+  text-decoration: underline;
+}
+
 .sub-nav {
-  font-size: 18px;
   display: flex;
-  gap: 2rem;
-  margin-top: 2rem;
+  flex-direction: row;
   position: absolute;
-  right: 35%;
+  top: 100%;
+  left: 0;
+  background-color: white;
+  padding: 0.5rem;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  opacity: 1; /* Ensure sub-nav is fully visible */
+  visibility: visible; /* Ensure it's visible */
 }
 
 .sub-nav a {
+  margin-right: 1rem;
+  color: green;
   text-decoration: none;
-  color: green;
 }
 
+/* Change sub-nav hover color to gold */
+.sub-nav a:hover {
+  color: gold;
+}
+
+/* Active link style in sub-nav */
 .sub-nav a.active {
-  text-decoration: underline;
-  color: green;
+  color: green; /* Text color when active */
+  text-decoration: underline; /* Green underline for active sub-nav items */
 }
 
-.sub-nav li.active > a {
-  text-decoration: underline;
-  color: green;
+/* Ensure sub-nav doesn't hide until explicitly told */
+.nav-item:hover .sub-nav,
+.nav-item:active .sub-nav {
+  display: flex;
 }

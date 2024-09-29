@@ -1,0 +1,35 @@
+.deductify-info {
+    width: 80vw;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+    text-align: left;
+  }
+  
+  .header {
+    color: green;
+    font-size: 28px;
+    margin-bottom: 1rem;
+  }
+  
+  .features-list,
+  .benefits-list {
+    list-style-type: disc;
+    padding-left: 2rem;
+  }
+  
+  .features-list li,
+  .benefits-list li {
+    margin-bottom: 0.5rem;
+    color: black;
+  }
+  
+  .features-list li::marker,
+  .benefits-list li::marker {
+    color: green;
+    font-size: 18px;
+  }
+  
+  strong {
+    color: green;
+  }
+  

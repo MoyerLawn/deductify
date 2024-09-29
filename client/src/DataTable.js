@@ -12,6 +12,7 @@ import {
   Button,
   Checkbox,
   TablePagination,
+  TableSortLabel,
 } from '@mui/material';
 
 const sampleData = [
@@ -29,6 +30,8 @@ const DataTable = () => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage] = useState(5);
+  const [order, setOrder] = useState('asc');
+  const [orderBy, setOrderBy] = useState('name');
 
   const handleSelect = (name) => {
     setSelectedItems((prev) =>
@@ -57,8 +60,24 @@ const DataTable = () => {
     setPage(newPage);
   };
 
+  const handleRequestSort = (property) => {
+    const isAsc = orderBy === property && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(property);
+  };
+
+  const sortedData = [...sampleData].sort((a, b) => {
+    if (a[orderBy] < b[orderBy]) {
+      return order === 'asc' ? -1 : 1;
+    }
+    if (a[orderBy] > b[orderBy]) {
+      return order === 'asc' ? 1 : -1;
+    }
+    return 0;
+  });
+
   return (
-    <Box sx={{ width: '75%', margin: '1rem auto' }}>
+    <Box sx={{ width: '80%', margin: '1rem auto' }}>
       <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold', color: 'green', marginBottom: '1rem', textAlign: 'left' }}>
         Transactions
       </Typography>
@@ -69,17 +88,71 @@ const DataTable = () => {
               <TableCell sx={{ borderColor: 'green' }}>
                 <Checkbox color="success" onChange={handleSelectAll} checked={selectedItems.length === sampleData.length} />
               </TableCell>
-              <TableCell sx={{ borderColor: 'green' }}>Name</TableCell>
-              <TableCell sx={{ borderColor: 'green' }}>Category</TableCell>
-              <TableCell sx={{ borderColor: 'green' }}>Vendor</TableCell>
-              <TableCell sx={{ borderColor: 'green' }}>Date</TableCell>
-              <TableCell sx={{ borderColor: 'green' }}>Total Amount</TableCell>
-              <TableCell sx={{ borderColor: 'green' }}>Writeoff Amount</TableCell>
+              <TableCell sx={{ borderColor: 'green' }}>
+                <TableSortLabel
+                  active={orderBy === 'name'}
+                  direction={orderBy === 'name' ? order : 'asc'}
+                  onClick={() => handleRequestSort('name')}
+                  sx={{ color: 'green' }}
+                >
+                  Name
+                </TableSortLabel>
+              </TableCell>
+              <TableCell sx={{ borderColor: 'green' }}>
+                <TableSortLabel
+                  active={orderBy === 'category'}
+                  direction={orderBy === 'category' ? order : 'asc'}
+                  onClick={() => handleRequestSort('category')}
+                  sx={{ color: 'green' }}
+                >
+                  Category
+                </TableSortLabel>
+              </TableCell>
+              <TableCell sx={{ borderColor: 'green' }}>
+                <TableSortLabel
+                  active={orderBy === 'vendor'}
+                  direction={orderBy === 'vendor' ? order : 'asc'}
+                  onClick={() => handleRequestSort('vendor')}
+                  sx={{ color: 'green' }}
+                >
+                  Vendor
+                </TableSortLabel>
+              </TableCell>
+              <TableCell sx={{ borderColor: 'green' }}>
+                <TableSortLabel
+                  active={orderBy === 'date'}
+                  direction={orderBy === 'date' ? order : 'asc'}
+                  onClick={() => handleRequestSort('date')}
+                  sx={{ color: 'green' }}
+                >
+                  Date
+                </TableSortLabel>
+              </TableCell>
+              <TableCell sx={{ borderColor: 'green' }}>
+                <TableSortLabel
+                  active={orderBy === 'totalAmount'}
+                  direction={orderBy === 'totalAmount' ? order : 'asc'}
+                  onClick={() => handleRequestSort('totalAmount')}
+                  sx={{ color: 'green' }}
+                >
+                  Total Amount
+                </TableSortLabel>
+              </TableCell>
+              <TableCell sx={{ borderColor: 'green' }}>
+                <TableSortLabel
+                  active={orderBy === 'writeoffAmount'}
+                  direction={orderBy === 'writeoffAmount' ? order : 'asc'}
+                  onClick={() => handleRequestSort('writeoffAmount')}
+                  sx={{ color: 'green' }}
+                >
+                  Writeoff Amount
+                </TableSortLabel>
+              </TableCell>
               <TableCell sx={{ borderColor: 'green' }}>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {sampleData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
+            {sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
               <TableRow key={row.name}>
                 <TableCell sx={{ borderColor: 'green' }}>
                   <Checkbox 
@@ -110,7 +183,7 @@ const DataTable = () => {
                       color="success"
                       onClick={() => handleDelete(row.name)}
                       size="small"
-                      disabled={selectedItems.length === 0}
+                      disabled={!selectedItems.includes(row.name)} // Ensure only enabled if the specific row is selected
                     >
                       Delete
                     </Button>
