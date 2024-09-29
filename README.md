@@ -1,5 +1,4 @@
 # Deductify
-# Welcome to Hack Midwest 2024!
 <br /><br />
 
 
