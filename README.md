@@ -25,8 +25,8 @@ Deductify is an application designed to simplify expense tracking for contractor
 ## What challenges are you building for? SELECT ALL THAT APPLY
 *See hackmidwest.com/#prizes for challenge details*
 - [X]  Pinata Challenge
-- [ ]  Pinata AI Challenge
-- [ ]  Pinata Enterprise Challenge
+- [X]  Pinata AI Challenge
+- [X]  Pinata Enterprise Challenge
 - [ ]  AWS Bedrock Challenge
 - [ ]  Red Hat | Intel AI Challenge
 - [ ]  Zoom Challenge
