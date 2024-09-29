@@ -75,6 +75,12 @@ const DataTable = () => {
 
   // DELETE request to Pinata
   const handleDelete = async (id) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this receipt transaction?");
+  
+    if (!confirmDelete) {
+      return;
+    }
+    
     const options = {
       method: "DELETE",
       headers: { Authorization: `Bearer ${pinataJwt}` },
