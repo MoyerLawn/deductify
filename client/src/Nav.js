@@ -35,7 +35,7 @@ const NavLinks = () => {
       setSelectedCategory(category);
       setSelectedSubNav(subCategory || subNavs[category][0].toLowerCase());
     } else if (category === "home") {
-      setSelectedCategory(null);
+      setSelectedCategory("home");
       setSelectedSubNav(null);
     } else {
       setSelectedCategory(null);
@@ -45,7 +45,7 @@ const NavLinks = () => {
 
   const handleCategoryClick = (category) => {
     if (category === "home") {
-      setSelectedCategory(null);
+      setSelectedCategory("home");
       setSelectedSubNav(null);
       navigate("/home");
     } else if (category !== selectedCategory) {

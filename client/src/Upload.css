@@ -1,148 +1,146 @@
-/* Container holding the two columns */
-.container {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-}
-
-/* Styles for the first column */
-.upload-column {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-}
-
-.upload-button {
-    padding: 10px 20px;
-    background-color: green;
-    color: white;
-    border: 2px solid green;
-    cursor: pointer;
-    border-radius: 5px;
-}
-
-.upload-button:hover {
-    background-color: white;
-    color: green;
-}
-
-.black-box {
-    width: 100px;
-    height: 100px;
-    background-color: black;
-}
-
-/* Styles for the form in the second column */
-.form-column {
-    width: 300px;
-}
-
-.upload-form h2 {
-    text-align: center;
-}
-
-.upload-form form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.upload-form label {
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-.upload-form input {
-    padding: 8px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-/* Buttons in the form */
-.buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-}
-
-/* Shared button styles */
-.clear-button, .save-button {
-    padding: 10px 20px;
-    color: white;
-    cursor: pointer;
-    border-radius: 5px;
-}
-
-/* Clear button styles (yellow) */
-.clear-button {
-    background-color: gold;
-    border: 2px solid gold;
-    color: white; /* White text for clear button */
-}
-
-.clear-button:hover {
-    background-color: white;
-    color: gold; /* On hover, change text to yellow */
-}
-
-/* Save button styles (green) */
-.save-button {
-    background-color: green;
-    border: 2px solid green;
-    color: white;
-}
-
-.save-button:hover {
-    background-color: white;
-    color: green;
+.upload-form {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
 }
 
 .columns-container {
-    display: flex; /* Use flexbox to create columns */
-    justify-content: space-between;
-    margin-left: 100px;  /* Add left margin to reduce gap */
-    margin-right: 100px; /* Add right margin to reduce gap */
-    gap: 0px; /* Space between columns */
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
 }
 
 .upload-column {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px; /* Space between upload button and black box */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  width: 25rem;
+}
+
+.upload-column-child {
+  margin-top: 5rem;
+}
+
+.upload-button {
+  padding: 10px 20px;
+  background-color: green;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.upload-button:hover {
+  background-color: white;
+  color: green;
+  border: 2px solid green;
 }
 
 .form-column {
-    width: 300px; /* Set width for the form column */
+  flex: 1;
 }
 
-.form-row {
-    display: flex; /* Use flexbox for form rows */
-    align-items: center; /* Align items vertically */
-    margin-bottom: 10px; /* Space between rows */
+.upload-form h2 {
+  text-align: center;
+  margin-bottom: 20px;
 }
 
-.form-row label {
-    margin-right: 10px; /* Space between label and input */
-    width: 100px; /* Fixed width for labels */
+.upload-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.upload-form label {
+  margin-bottom: 5px;
+}
+
+.upload-form input,
+.upload-form textarea {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
 }
 
 .buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: -2rem;
+  button {
+    width: 6rem;
+  }
+}
+
+.clear-button,
+.save-button {
+  padding: 10px 15px;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.clear-button {
+  background-color: gold;
+}
+
+.clear-button:hover {
+  background-color: white;
+  color: gold;
 }
 
 .save-button {
-    background-color: green; /* Green when enabled */
-    color: white;
-  }
-  
-  .save-button.disabled {
-    background-color: grey; /* Grey when disabled */
-    cursor: not-allowed;
-  }
+  background-color: green;
+}
 
+.save-button.disabled {
+  background-color: grey;
+  cursor: not-allowed;
+}
 
+.save-button:hover:not(.disabled) {
+  background-color: white;
+  color: green;
+}
+
+.loading-indicator {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.image-preview {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  overflow: hidden;
+  text-align: center;
+}
+
+.image-preview-img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.form-row-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.extracted-text {
+  margin: 0;
+  padding: 0;
+  font-size: 18px;
+  margin-right: 20rem;
+}
