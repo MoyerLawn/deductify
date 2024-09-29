@@ -11,6 +11,7 @@ import deductifyLogo from "./assets/deductifyLogo.png";
 import Upload from "./Upload";
 import DataTable from "./DataTable";
 import Intro from "./Intro";
+import Mileage from "./Mileage";
 
 const NavLinks = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -24,7 +25,6 @@ const NavLinks = () => {
     travel: ["Receipt", "Mileage"],
   };
 
-  // Effect to update state based on URL
   useEffect(() => {
     const pathParts = location.pathname.split("/");
     const category = pathParts[1];
@@ -32,7 +32,7 @@ const NavLinks = () => {
 
     if (category && subNavs[category]) {
       setSelectedCategory(category);
-      setSelectedSubNav(subCategory || subNavs[category][0].toLowerCase()); // Default to first subNav
+      setSelectedSubNav(subCategory || subNavs[category][0].toLowerCase());
     } else if (category === "home") {
       setSelectedCategory(null);
       setSelectedSubNav(null);
@@ -42,17 +42,16 @@ const NavLinks = () => {
     }
   }, [location, subNavs]);
 
-  // Set both category and default first subNav when category is clicked
   const handleCategoryClick = (category) => {
     if (category === "home") {
       setSelectedCategory(null);
       setSelectedSubNav(null);
-      navigate("/home"); // Navigate to the home route
+      navigate("/home");
     } else if (category !== selectedCategory) {
       setSelectedCategory(category);
       const firstSubNav = subNavs[category][0].toLowerCase();
       setSelectedSubNav(firstSubNav);
-      navigate(`/${category}/${firstSubNav}`); // Redirect to the first subNav
+      navigate(`/${category}/${firstSubNav}`);
     }
   };
 
@@ -108,8 +107,8 @@ const Nav = () => (
       <Route path="/home" element={<Intro />} />
       <Route path="/business/upload" element={<Upload />} />
       <Route path="/business/view" element={<DataTable />} />
-      <Route path="/travel/receipt" element={<Upload />} />
-      <Route path="/travel/mileage" element={<div>Travel Mileage</div>} />
+      <Route path="/travel/receipt" element={<Upload />} />  
+      <Route path="/travel/mileage" element={<Mileage />} />
       <Route path="/donations/upload" element={<Upload />} />
       <Route path="/donations/view" element={<div>Donations View</div>} />
       <Route path="/" element={<Intro />} />
