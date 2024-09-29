@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes, Link, useLocation } from "react-router-dom";
 import deductifyLogo from "./assets/deductifyLogo.png";
+import Upload from "./Upload";
 
 const NavComponent = () => {
   const [openSubNav, setOpenSubNav] = useState(null);
@@ -55,14 +56,15 @@ const App = () => (
   <Router>
     <NavComponent />
     <Routes>
-      <Route path="/business/upload" element={<div>Business Upload</div>} />
+      <Route path="/business/upload" element={<Upload/>} />
       <Route path="/business/view" element={<div>Business View</div>} />
-      <Route path="/travel/upload" element={<div>Travel Upload</div>} />
+      <Route path="/travel/upload" element={<Upload/>} />
       <Route path="/travel/view" element={<div>Travel View</div>} />
-      <Route path="/office/upload" element={<div>Office Upload</div>} />
+      <Route path="/office/upload" element={<Upload/>} />
       <Route path="/office/view" element={<div>Office View</div>} />
-      <Route path="/donations/upload" element={<div>Donations Upload</div>} />
+      <Route path="/donations/upload" element={<Upload/>} />
       <Route path="/donations/view" element={<div>Donations View</div>} />
+
       <Route path="/" element={<div>Welcome! Select a category.</div>} />
     </Routes>
   </Router>
