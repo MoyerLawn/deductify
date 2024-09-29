@@ -1,20 +1,23 @@
 import React, { useState, useRef  } from "react";
-import { BrowserRouter as Router, Route, Routes, Link, useLocation } from "react-router-dom";
+import Tesseract from 'tesseract.js';
 
 const Upload = () => {
   const [formData, setFormData] = useState({
     name: '',
-    vendor: '',
     date: '',
     totalAmount: '',
     writeoffAmount: '',
+    extractedText: '',
   });
+
   const [jwt, setJwt] = useState('');
   const [file, setFile] = useState(null);
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
   const [isImageSelected, setIsImageSelected] = useState(false);
   const fileInputRef = useRef(null);
+  const [extractedText, setExtractedText] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -29,7 +32,7 @@ const Upload = () => {
     const options = {
       method: 'POST',
       headers: {
-        Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiIyNDk5ZDFhNy04ZWFkLTQ1MGItYTNiYi1kNjRjZjZjZDc0NjciLCJlbWFpbCI6ImNoYXNlbTEyMzRAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInBpbl9wb2xpY3kiOnsicmVnaW9ucyI6W3siZGVzaXJlZFJlcGxpY2F0aW9uQ291bnQiOjEsImlkIjoiRlJBMSJ9LHsiZGVzaXJlZFJlcGxpY2F0aW9uQ291bnQiOjEsImlkIjoiTllDMSJ9XSwidmVyc2lvbiI6MX0sIm1mYV9lbmFibGVkIjpmYWxzZSwic3RhdHVzIjoiQUNUSVZFIn0sImF1dGhlbnRpY2F0aW9uVHlwZSI6InNjb3BlZEtleSIsInNjb3BlZEtleUtleSI6IjgxMjUzNjY2ZWE1ZWI1MjUwOGNlIiwic2NvcGVkS2V5U2VjcmV0IjoiYzc5YjVlYTc4ZGMxZWNiOGRjNjVmMzMxNWJkNTRhZDE1M2E3ZWYwYjEwMjA4MWNhNjcwNmY0NjE3MjJhZGNlYyIsImV4cCI6MTc1OTEwOTA3MH0.e4yIYrCMhrVSvb60lL9At4BUCF-Yglt3rGDGkcAFrqE',
+        Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiI3NmJjODdmNy0xMzcwLTQ4MjctYTI4OS1mZmRjZjkyMGU5ZmMiLCJlbWFpbCI6Imx1aWFtaTE0QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxLCJpZCI6IkZSQTEifSx7ImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxLCJpZCI6Ik5ZQzEifV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiI1ODc1MjkwYWQ1ODg2OTBiZDAzYyIsInNjb3BlZEtleVNlY3JldCI6ImIzN2RjNTVmMWY2ZjY2MmFjMTllN2EwNGQ0ZGE5ZGJkNTY1M2I2ODNjYjFkNWEyM2U5NTUxMmI2NzllYmI3OTMiLCJleHAiOjE3NTkxMjgyMTJ9.cgm3sNsMefq62h1bcbi0TzGf0of6agqalNcXMWE0bsM',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -60,16 +63,37 @@ const Upload = () => {
         const file = e.target.files[0];
         if (file) 
         {
-        setImage(file);
-        const imageUrl = URL.createObjectURL(file);
-        setPreview(imageUrl);
-        setIsImageSelected(true); // Enable the save button
+            setImage(file);
+            const imageUrl = URL.createObjectURL(file);
+            setPreview(imageUrl);
+            processImage(file); // Process the image for text extraction
+            setIsImageSelected(true); // Enable the save button
         }
         else 
         {
             setIsImageSelected(false); // Disable the save button if no file
         }
     };
+
+    const processImage = (file) => {
+        setLoading(true);
+        Tesseract.recognize(
+          file,
+          'eng', // Specify the language
+          {
+            logger: (m) => console.log(m), // Optional: to log the progress
+          }
+        )
+          .then(({ data: { text } }) => {
+            setExtractedText(text); // Set the extracted text
+            setLoading(false); // Stop loading indicator
+            handleExtractedText(text); // Handle the extracted text
+        })
+          .catch((err) => {
+            console.error('OCR Error:', err);
+            setLoading(false);
+          });
+      };
 
   const handleButtonClick = () => {
     fileInputRef.current.click(); // Programmatically trigger the file input
@@ -94,7 +118,11 @@ const Upload = () => {
         form.append('date', formData.date);
         form.append('totalAmount', formData.totalAmount);
         form.append('writeoffAmount', formData.writeoffAmount);
-        form.append('file', file);
+        // form.append('file', file);
+
+        // Convert date to a Blob (could be a string or JSON representation)
+        const dateBlob = new Blob([formData], { type: 'text/plain' });
+        form.append('finalFile', dateBlob, 'finalFile.txt'); // Append date as a file
 
         const options = {
         method: 'POST',
@@ -113,21 +141,73 @@ const Upload = () => {
         }
     };
 
-  const handleSave = async () => {
+  const handleSave = async (e) => {
     console.log('Saving data...');
+    console.log('Image saved!');
+    e.preventDefault();
+    console.log('Extracted Text Saved:', extractedText);
     await createApiKey();
     await uploadFormData();
     };
 
   const handleClear = () => {
+    setExtractedText(''); // Clear the text area
     setFormData({
       name: '',
       vendor: '',
       date: '',
       totalAmount: '',
       writeoffAmount: '',
+      extractedText: '',
     });
   };
+
+    // Function to parse the extracted text and map it to the form fields
+    const handleExtractedText = (text) => {
+        // const parsedData = parseText(text);
+
+        const lines = text.split('\n');
+
+        const amountRegex = /(?:[$€£¥₹]?\d{1,3}(?:,\d{3})*(?:\.\d{2})?)|(?:\d{1,3}(?:,\d{3})*(?:\.\d{2})?[$€£¥₹]?)/;
+        const dateRegex = /(?:\b(?:0?[1-9]|[12][0-9]|3[01])[-\/.](?:0?[1-9]|1[0-2])[-\/.](?:\d{4})\b)|(?:\b(?:0?[1-9]|1[0-2])[-\/.](?:0?[1-9]|[12][0-9]|3[01])[-\/.](?:\d{4})\b)|(?:\b\d{4}[-\/.](?:0?[1-9]|1[0-2])[-\/.](?:0?[1-9]|[12][0-9]|3[01])\b)|(?:\b(?:[1-9]|[12][0-9]|3[01]) (?:January|February|March|April|May|June|July|August|September|October|November|December) (?:\d{4})\b)|(?:\b(?:January|February|March|April|May|June|July|August|September|October|November|December) (?:[1-9]|[12][0-9]|3[01]), (?:\d{4})\b)/;
+        const name = lines[0];
+
+        // Match common fields with regex
+        const amountMatch = text.match(amountRegex);
+        const dateMatch = text.match(dateRegex);
+        const nameMatch = text.match(name);
+
+        console.log(amountMatch, 'amountMatch');
+        console.log(dateMatch, 'dateMatch');
+        console.log(nameMatch, 'nameMatch');
+
+        // Other lines as notes
+        const remainingText = text
+        .replace(amountMatch, '')
+        .replace(dateMatch, '')
+        .replace(nameMatch, '');
+
+        setFormData({
+            name: nameMatch ? nameMatch[0] : '',
+            date: dateMatch ? dateMatch[0] : '',
+            totalAmount: amountMatch ? amountMatch[0] : '',
+            notes: remainingText || remainingText ? remainingText[0] : '',
+        });
+
+        // setFormData(parsedData);
+      };
+    
+      // Example of a basic parsing function (this can be customized depending on the structure of your text)
+      const parseText = (text) => {
+        const lines = text.split('\n');
+        const data = {
+          name: lines[0] || '',
+          date: lines[1] || '',
+          company: lines[2] || '',
+          notes: lines.slice(3).join(' ') || ''
+        };
+        return data;
+      };
   
     return (
         <div className="upload-form">
@@ -143,80 +223,76 @@ const Upload = () => {
                     </div>
                 )}
                 </div>
+                {loading && <p>Processing image, please wait...</p>}
                 {/* Second Column */}
-                <div className="form-column">
-                    <h2>Upload Form</h2>
-                    <form>
-                        <div className="form-row">
-                            <label>Name: </label>
-                            <input
-                                type="text"
-                                name="name"
-                                value={formData.name}
-                                onChange={handleChange}
-                            />
-                        </div>
-    
-                        <div className="form-row">
-                            <label>Vendor: </label>
-                            <input
-                                type="text"
-                                name="vendor"
-                                value={formData.vendor}
-                                onChange={handleChange}
-                            />
-                        </div>
-    
-                        <div className="form-row">
-                            <label>Date: </label>
-                            <input
-                                type="date"
-                                name="date"
-                                value={formData.date}
-                                onChange={handleChange}
-                            />
-                        </div>
-    
-                        <div className="form-row">
-                            <label>Total Amount: </label>
-                            <input
-                                type="number"
-                                name="totalAmount"
-                                value={formData.totalAmount}
-                                onChange={handleChange}
-                            />
-                        </div>
-    
-                        <div className="form-row">
-                            <label>Writeoff Amount: </label>
-                            <input
-                                type="number"
-                                name="writeoffAmount"
-                                value={formData.writeoffAmount}
-                                onChange={handleChange}
-                            />
-                        </div>
-    
-                        <div className="buttons">
-                            <button
-                                type="button"
-                                className="clear-button"
-                                onClick={handleClear}
-                            >
-                                Clear
-                            </button>
-    
-                            <button
-                                type="button"
-                                className={`save-button ${!isImageSelected ? 'disabled' : ''}`}
-                                onClick={handleSave}
-                                disabled={!isImageSelected}
-                            >
-                                Save
-                            </button>
-                        </div>
-                    </form>
-                </div>
+                <form onSubmit={handleSave}>
+                    <div className="form-column">
+                        <h2>Upload Form</h2>
+                        <form>
+
+                            <div className="form-row">
+                                <label>Vendor:</label>
+                                <input
+                                    type="text"
+                                    name="name"
+                                    value={formData.name}
+                                    onChange={handleChange}
+                                />
+                            </div>
+        
+                            <div className="form-row">
+                                <label>Date:</label>
+                                <input
+                                    type="text"
+                                    name="date"
+                                    value={formData.date}
+                                    onChange={handleChange}
+                                />
+                            </div>
+        
+                            <div className="form-row">
+                                <label>Total Amount: </label>
+                                <input
+                                    type="number"
+                                    name="totalAmount"
+                                    value={formData.totalAmount}
+                                    onChange={handleChange}
+                                />
+                            </div>
+
+                            <label>
+                                Extracted Text:
+                                <textarea
+                                    name="extractedText"
+                                    value={extractedText}
+                                    onChange={(e) => setExtractedText(e.target.value)} // Allow user to edit the text
+                                    rows="6"
+                                    cols="50"
+                                />
+                            </label>
+                            <br />
+        
+                            <div className="buttons">
+                                <button
+                                    type="button"
+                                    className="clear-button"
+                                    onClick={handleClear}
+                                >
+                                    Clear
+                                </button>
+        
+                                <button
+                                    type="button"
+                                    className={`save-button ${!isImageSelected ? 'disabled' : ''}`}
+                                    onClick={handleSave}
+                                    disabled={!isImageSelected}
+                                >
+                                    Save
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </form>
             </div>
         </div>
     );
