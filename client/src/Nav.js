@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import deductifyLogo from "./assets/deductifyLogo.png";
 import Upload from "./Upload";
+import DataTable from "./DataTable";
 
 const NavLinks = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -87,7 +88,7 @@ const Nav = () => (
     <NavLinks />
     <Routes>
       <Route path="/business/upload" element={<Upload/>} />
-      <Route path="/business/view" element={<div>Business View</div>} />
+      <Route path="/business/view" element={<DataTable />} />
       <Route path="/travel/upload" element={<Upload/>} />
       <Route path="/travel/view" element={<div>Travel View</div>} />
       <Route path="/office/upload" element={<Upload/>} />
