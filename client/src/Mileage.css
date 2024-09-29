@@ -62,4 +62,7 @@
   .button {
     margin: 0 1rem;
   }
-  
+
+  .extracted-text-area {
+    margin-right: 0;
+  }

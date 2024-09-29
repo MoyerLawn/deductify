@@ -108,10 +108,10 @@ const Nav = () => (
       <Route path="/home" element={<Intro />} />
       <Route path="/business/upload" element={<Upload />} />
       <Route path="/business/view" element={<DataTable />} />
-      <Route path="/travel/receipt" element={<TravelUpload />} />  
+      <Route path="/travel/receipt" element={<TravelUpload />} />
       <Route path="/travel/mileage" element={<Mileage />} />
-      <Route path="/donations/upload" element={<Upload />} />
-      <Route path="/donations/view" element={<div>Donations View</div>} />
+      <Route path="/donations/upload" element={<Upload isDonation={true} />} />
+      <Route path="/donations/view" element={<DataTable />} />
       <Route path="/" element={<Intro />} />
     </Routes>
   </Router>

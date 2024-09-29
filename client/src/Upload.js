@@ -1,12 +1,12 @@
 import React, { useState, useRef } from "react";
 import Tesseract from "tesseract.js";
 
-const Upload = () => {
+const Upload = (props) => {
+  const { isDonation } = props;
   const [formData, setFormData] = useState({
-    name: "",
+    vendor: "",
     date: "",
     totalAmount: "",
-    writeoffAmount: "",
     extractedText: "",
   });
 
@@ -155,11 +155,9 @@ const Upload = () => {
   const handleClear = () => {
     setExtractedText(""); // Clear the text area
     setFormData({
-      name: "",
       vendor: "",
       date: "",
       totalAmount: "",
-      writeoffAmount: "",
       extractedText: "",
     });
   };
@@ -192,22 +190,11 @@ const Upload = () => {
       .replace(nameMatch, "");
 
     setFormData({
-      name: nameMatch ? nameMatch[0] : "",
+      vendor: nameMatch ? nameMatch[0] : "",
       date: dateMatch ? dateMatch[0] : "",
       totalAmount: amountMatch ? amountMatch[0] : "",
       notes: remainingText || remainingText ? remainingText[0] : "",
     });
-  };
-
-  const parseText = (text) => {
-    const lines = text.split("\n");
-    const data = {
-      name: lines[0] || "",
-      date: lines[1] || "",
-      company: lines[2] || "",
-      notes: lines.slice(3).join(" ") || "",
-    };
-    return data;
   };
 
   return (
@@ -242,14 +229,14 @@ const Upload = () => {
         {loading && <p>Processing image, please wait...</p>}
         <form onSubmit={handleSave}>
           <div className="form-column">
-            <h2>Upload Form</h2>
+            <h3>Upload Receipt</h3>
             <form>
               <div className="form-row">
-                <label>Vendor:</label>
+                <label>{isDonation ? "Organization:" : "Vendor:"}</label>
                 <input
                   type="text"
-                  name="name"
-                  value={formData.name}
+                  name="vendor"
+                  value={formData.vendor}
                   onChange={handleChange}
                 />
               </div>
