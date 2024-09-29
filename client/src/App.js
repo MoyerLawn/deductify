@@ -1,7 +1,8 @@
 import "./App.css";
 import "./Nav.css";
 import "./Upload.css"
-import "./Mileage.css"
+import "./TravelUpload.css";
+import "./Mileage.css";
 import Nav from "./Nav";
 
 function App() {

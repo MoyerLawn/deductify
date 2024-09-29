@@ -9,6 +9,7 @@ import {
 } from "react-router-dom";
 import deductifyLogo from "./assets/deductifyLogo.png";
 import Upload from "./Upload";
+import TravelUpload from "./TravelUpload";
 import DataTable from "./DataTable";
 import Intro from "./Intro";
 import Mileage from "./Mileage";
@@ -107,7 +108,7 @@ const Nav = () => (
       <Route path="/home" element={<Intro />} />
       <Route path="/business/upload" element={<Upload />} />
       <Route path="/business/view" element={<DataTable />} />
-      <Route path="/travel/receipt" element={<Upload />} />  
+      <Route path="/travel/receipt" element={<TravelUpload />} />  
       <Route path="/travel/mileage" element={<Mileage />} />
       <Route path="/donations/upload" element={<Upload />} />
       <Route path="/donations/view" element={<div>Donations View</div>} />
