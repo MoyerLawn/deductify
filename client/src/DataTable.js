@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Table,
@@ -15,89 +15,86 @@ import {
   TableSortLabel,
 } from "@mui/material";
 
-const initialData = [
-  {
-    category: "Electronics",
-    vendor: "Vendor A",
-    date: "2024-09-28",
-    totalAmount: 1000,
-  },
-  {
-    category: "Furniture",
-    vendor: "Vendor B",
-    date: "2024-09-27",
-    totalAmount: 1500,
-  },
-  {
-    category: "Clothing",
-    vendor: "Vendor C",
-    date: "2024-09-26",
-    totalAmount: 2000,
-  },
-  {
-    category: "Groceries",
-    vendor: "Vendor D",
-    date: "2024-09-25",
-    totalAmount: 2500,
-  },
-  {
-    category: "Toys",
-    vendor: "Vendor E",
-    date: "2024-09-24",
-    totalAmount: 3000,
-  },
-  {
-    category: "Sports",
-    vendor: "Vendor F",
-    date: "2024-09-23",
-    totalAmount: 3500,
-  },
-  {
-    category: "Books",
-    vendor: "Vendor G",
-    date: "2024-09-22",
-    totalAmount: 4000,
-  },
-  {
-    category: "Stationery",
-    vendor: "Vendor H",
-    date: "2024-09-21",
-    totalAmount: 4500,
-  },
-];
-
 const DataTable = () => {
-  const [data, setData] = useState(initialData); // State for data
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [selectedItems, setSelectedItems] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage] = useState(5);
   const [order, setOrder] = useState("asc");
-  const [orderBy, setOrderBy] = useState("category");
+  const [orderBy, setOrderBy] = useState("name");
 
-  const handleSelect = (category) => {
+  const pinataJwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiIyNDk5ZDFhNy04ZWFkLTQ1MGItYTNiYi1kNjRjZjZjZDc0NjciLCJlbWFpbCI6ImNoYXNlbTEyMzRAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInBpbl9wb2xpY3kiOnsicmVnaW9ucyI6W3siZGVzaXJlZFJlcGxpY2F0aW9uQ291bnQiOjEsImlkIjoiRlJBMSJ9LHsiZGVzaXJlZFJlcGxpY2F0aW9uQ291bnQiOjEsImlkIjoiTllDMSJ9XSwidmVyc2lvbiI6MX0sIm1mYV9lbmFibGVkIjpmYWxzZSwic3RhdHVzIjoiQUNUSVZFIn0sImF1dGhlbnRpY2F0aW9uVHlwZSI6InNjb3BlZEtleSIsInNjb3BlZEtleUtleSI6IjU4Mjg4YzU4YzFiY2NjMTA4OTdmIiwic2NvcGVkS2V5U2VjcmV0IjoiYzE4ZDZjYjg3MDE3NmIxYjcwZTdjZGVmYjQwZWM2YTUyYjAyOGM1OWFjNDk3NDk2NTRiMzExNmFjOTBlNzQ3ZiIsImV4cCI6MTc1OTEzOTc3MH0.z5akxnkdWjFD023fflbPvzQyiOHdXtd93hItw0CzrLY";
+
+  useEffect(() => {
+    const fetchFiles = async () => {
+      const options = {
+        method: "GET",
+        headers: { Authorization: `Bearer ${pinataJwt}` },
+      };
+
+      try {
+        const response = await fetch("https://api.pinata.cloud/v3/files", options);
+        const result = await response.json();
+
+        if (result.data && result.data.files) {
+          setData(result.data.files);
+        } else {
+          setData([]);
+        }
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching data:", err);
+        setError("Failed to load data.");
+        setLoading(false);
+      }
+    };
+
+    fetchFiles();
+  }, [pinataJwt]);
+
+  const handleSelect = (id) => {
     setSelectedItems((prev) =>
-      prev.includes(category)
-        ? prev.filter((item) => item !== category)
-        : [...prev, category]
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
   };
 
   const handleSelectAll = (event) => {
     if (event.target.checked) {
-      const allCategories = data.map((item) => item.category);
-      setSelectedItems(allCategories);
+      const allIds = data.map((item) => item.id);
+      setSelectedItems(allIds);
     } else {
       setSelectedItems([]);
     }
   };
 
-  const handleEdit = (category) => {
-    console.log("Edit:", category);
+  const handleEdit = (id) => {
+    console.log("Edit:", id);
   };
 
-  const handleDelete = (category) => {
-    setData((prevData) => prevData.filter((item) => item.category !== category));
-    setSelectedItems((prevItems) => prevItems.filter((item) => item !== category)); // Remove the deleted item from selected items
+  // DELETE request to Pinata
+  const handleDelete = async (id) => {
+    const options = {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${pinataJwt}` },
+    };
+
+    try {
+      const response = await fetch(`https://api.pinata.cloud/v3/files/${id}`, options);
+      const result = await response.json();
+      console.log("Delete response:", result);
+
+      if (response.ok) {
+        // If successful, remove the deleted item from the data array
+        setData((prevData) => prevData.filter((item) => item.id !== id));
+        setSelectedItems((prevItems) => prevItems.filter((item) => item !== id));
+      } else {
+        console.error("Failed to delete file:", result);
+      }
+    } catch (err) {
+      console.error("Error deleting file:", err);
+    }
   };
 
   const handleChangePage = (event, newPage) => {
@@ -110,7 +107,19 @@ const DataTable = () => {
     setOrderBy(property);
   };
 
-  const sortedData = [...data].sort((a, b) => {
+  const formatDate = (dateString) => {
+    const options = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true,
+    };
+    return new Intl.DateTimeFormat('en-US', options).format(new Date(dateString));
+  };
+
+  const sortedData = data.sort((a, b) => {
     if (a[orderBy] < b[orderBy]) {
       return order === "asc" ? -1 : 1;
     }
@@ -119,6 +128,14 @@ const DataTable = () => {
     }
     return 0;
   });
+
+  if (loading) {
+    return <Typography>Loading...</Typography>;
+  }
+
+  if (error) {
+    return <Typography color="error">{error}</Typography>;
+  }
 
   return (
     <Box sx={{ width: "60%", margin: "1rem auto" }}>
@@ -147,42 +164,42 @@ const DataTable = () => {
               </TableCell>
               <TableCell sx={{ borderColor: "green" }}>
                 <TableSortLabel
-                  active={orderBy === "category"}
-                  direction={orderBy === "category" ? order : "asc"}
-                  onClick={() => handleRequestSort("category")}
+                  active={orderBy === "name"}
+                  direction={orderBy === "name" ? order : "asc"}
+                  onClick={() => handleRequestSort("name")}
                   sx={{ color: "green" }}
                 >
-                  Category
+                  File Name
                 </TableSortLabel>
               </TableCell>
               <TableCell sx={{ borderColor: "green" }}>
                 <TableSortLabel
-                  active={orderBy === "vendor"}
-                  direction={orderBy === "vendor" ? order : "asc"}
-                  onClick={() => handleRequestSort("vendor")}
+                  active={orderBy === "size"}
+                  direction={orderBy === "size" ? order : "asc"}
+                  onClick={() => handleRequestSort("size")}
                   sx={{ color: "green" }}
                 >
-                  Vendor
+                  Size
                 </TableSortLabel>
               </TableCell>
               <TableCell sx={{ borderColor: "green" }}>
                 <TableSortLabel
-                  active={orderBy === "date"}
-                  direction={orderBy === "date" ? order : "asc"}
-                  onClick={() => handleRequestSort("date")}
+                  active={orderBy === "mime_type"}
+                  direction={orderBy === "mime_type" ? order : "asc"}
+                  onClick={() => handleRequestSort("mime_type")}
                   sx={{ color: "green" }}
                 >
-                  Date
+                  MIME Type
                 </TableSortLabel>
               </TableCell>
               <TableCell sx={{ borderColor: "green" }}>
                 <TableSortLabel
-                  active={orderBy === "totalAmount"}
-                  direction={orderBy === "totalAmount" ? order : "asc"}
-                  onClick={() => handleRequestSort("totalAmount")}
+                  active={orderBy === "created_at"}
+                  direction={orderBy === "created_at" ? order : "asc"}
+                  onClick={() => handleRequestSort("created_at")}
                   sx={{ color: "green" }}
                 >
-                  Total Amount
+                  Created At
                 </TableSortLabel>
               </TableCell>
               <TableCell sx={{ borderColor: "green" }}>Actions</TableCell>
@@ -192,25 +209,19 @@ const DataTable = () => {
             {sortedData
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => (
-                <TableRow key={row.category}>
+                <TableRow key={row.id}>
                   <TableCell sx={{ borderColor: "green" }}>
                     <Checkbox
                       color="success"
-                      checked={selectedItems.includes(row.category)}
-                      onChange={() => handleSelect(row.category)}
+                      checked={selectedItems.includes(row.id)}
+                      onChange={() => handleSelect(row.id)}
                     />
                   </TableCell>
+                  <TableCell sx={{ borderColor: "green" }}>{row.name}</TableCell>
+                  <TableCell sx={{ borderColor: "green" }}>{row.size}</TableCell>
+                  <TableCell sx={{ borderColor: "green" }}>{row.mime_type}</TableCell>
                   <TableCell sx={{ borderColor: "green" }}>
-                    {row.category}
-                  </TableCell>
-                  <TableCell sx={{ borderColor: "green" }}>
-                    {row.vendor}
-                  </TableCell>
-                  <TableCell sx={{ borderColor: "green" }}>
-                    {row.date}
-                  </TableCell>
-                  <TableCell sx={{ borderColor: "green" }}>
-                    {row.totalAmount}
+                    {formatDate(row.created_at)}
                   </TableCell>
                   <TableCell sx={{ borderColor: "green" }}>
                     <Box
@@ -224,18 +235,18 @@ const DataTable = () => {
                           backgroundColor: "gold",
                           color: "green",
                         }}
-                        onClick={() => handleEdit(row.category)}
+                        onClick={() => handleEdit(row.id)}
                         size="small"
-                        disabled={!selectedItems.includes(row.category)}
+                        disabled={!selectedItems.includes(row.id)}
                       >
                         Edit
                       </Button>
                       <Button
                         variant="contained"
                         color="success"
-                        onClick={() => handleDelete(row.category)} // Call delete function
+                        onClick={() => handleDelete(row.id)}
                         size="small"
-                        disabled={!selectedItems.includes(row.category)} // Ensure only enabled if the specific row is selected
+                        disabled={!selectedItems.includes(row.id)}
                       >
                         Delete
                       </Button>
