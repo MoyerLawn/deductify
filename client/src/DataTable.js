@@ -107,7 +107,19 @@ const DataTable = () => {
     setOrderBy(property);
   };
 
-  const sortedData = data?.sort((a, b) => {
+  const formatDate = (dateString) => {
+    const options = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true,
+    };
+    return new Intl.DateTimeFormat('en-US', options).format(new Date(dateString));
+  };
+
+  const sortedData = data.sort((a, b) => {
     if (a[orderBy] < b[orderBy]) {
       return order === "asc" ? -1 : 1;
     }
