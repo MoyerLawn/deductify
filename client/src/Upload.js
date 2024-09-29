@@ -1,12 +1,12 @@
 import React, { useState, useRef } from "react";
 import Tesseract from "tesseract.js";
 
-const Upload = (props) => {
-  const { isDonation } = props;
+const Upload = () => {
   const [formData, setFormData] = useState({
-    vendor: "",
+    name: "",
     date: "",
     totalAmount: "",
+    writeoffAmount: "",
     extractedText: "",
   });
 
@@ -52,8 +52,8 @@ const Upload = (props) => {
       const data = await response.json();
       console.log("API Key Response:", data);
       if (data.JWT) {
-        setJwt(data.JWT);
         console.log("JWT received:", data.JWT);
+        return data.JWT;
       } else {
         console.error("Failed to get JWT:", data);
       }
@@ -63,17 +63,18 @@ const Upload = (props) => {
   };
 
   const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImage(file);
-      const imageUrl = URL.createObjectURL(file);
-      setPreview(imageUrl);
-      processImage(file); // Process the image for text extraction
-      setIsImageSelected(true); // Enable the save button
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+        setFile(selectedFile);
+        setImage(selectedFile);
+        const imageUrl = URL.createObjectURL(selectedFile);
+        setPreview(imageUrl);
+        processImage(selectedFile);
+        setIsImageSelected(true);
     } else {
-      setIsImageSelected(false); // Disable the save button if no file
+        setIsImageSelected(false);
     }
-  };
+};
 
   const processImage = (file) => {
     setLoading(true);
@@ -99,11 +100,13 @@ const Upload = (props) => {
     fileInputRef.current.click(); // Programmatically trigger the file input
   };
 
-  const uploadFormData = async () => {
+  const uploadFormData = async (jwt) => {
     if (!jwt) {
       console.error("No JWT available. Create API key first.");
       return;
     }
+
+    console.log("Uploading form data with JWT:", jwt);
 
     if (!file) {
       console.error("No file selected for upload.");
@@ -117,7 +120,7 @@ const Upload = (props) => {
     form.append("date", formData.date);
     form.append("totalAmount", formData.totalAmount);
     form.append("writeoffAmount", formData.writeoffAmount);
-    // form.append('file', file);
+    form.append('file', file);
 
     // Convert date to a Blob (could be a string or JSON representation)
     const dateBlob = new Blob([formData], { type: "text/plain" });
@@ -137,34 +140,40 @@ const Upload = (props) => {
         options
       );
       const data = await response.json();
-      console.log("File upload response:", data);
+      if (data) {
+        console.log("File upload response:", data);
+        handleClear();
+        alert("File uploaded successfully!");
+    }
     } catch (error) {
       console.error("Error uploading form data:", error);
     }
   };
 
   const handleSave = async (e) => {
-    console.log("Saving data...");
-    console.log("Image saved!");
     e.preventDefault();
-    console.log("Extracted Text Saved:", extractedText);
-    await createApiKey();
-    await uploadFormData();
+    console.log("Saving data...");
+    const jwt = await createApiKey();
+    console.log("JWT available after createApiKey:", jwt);
+    await uploadFormData(jwt);
   };
+  
 
   const handleClear = () => {
-    setExtractedText(""); // Clear the text area
+    setExtractedText("");
     setFormData({
-      vendor: "",
-      date: "",
-      totalAmount: "",
-      extractedText: "",
+        name: "",
+        vendor: "",
+        date: "",
+        totalAmount: "",
+        writeoffAmount: "",
+        extractedText: "",
     });
-  };
+    setFile(null);
+    setPreview(null);
+};
 
-  // Function to parse the extracted text and map it to the form fields
   const handleExtractedText = (text) => {
-    // const parsedData = parseText(text);
 
     const lines = text.split("\n");
 
@@ -190,11 +199,22 @@ const Upload = (props) => {
       .replace(nameMatch, "");
 
     setFormData({
-      vendor: nameMatch ? nameMatch[0] : "",
+      name: nameMatch ? nameMatch[0] : "",
       date: dateMatch ? dateMatch[0] : "",
       totalAmount: amountMatch ? amountMatch[0] : "",
       notes: remainingText || remainingText ? remainingText[0] : "",
     });
+  };
+
+  const parseText = (text) => {
+    const lines = text.split("\n");
+    const data = {
+      name: lines[0] || "",
+      date: lines[1] || "",
+      company: lines[2] || "",
+      notes: lines.slice(3).join(" ") || "",
+    };
+    return data;
   };
 
   return (
@@ -229,14 +249,14 @@ const Upload = (props) => {
         {loading && <p>Processing image, please wait...</p>}
         <form onSubmit={handleSave}>
           <div className="form-column">
-            <h3>Upload Receipt</h3>
+            <h2>Upload Form</h2>
             <form>
               <div className="form-row">
-                <label>{isDonation ? "Organization:" : "Vendor:"}</label>
+                <label>Vendor:</label>
                 <input
                   type="text"
-                  name="vendor"
-                  value={formData.vendor}
+                  name="name"
+                  value={formData.name}
                   onChange={handleChange}
                 />
               </div>
