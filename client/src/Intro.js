@@ -14,7 +14,7 @@ const Intro = () => {
       </p>
       <h2 className="header">What is Deductify?</h2>
       <p>
-        Deductify leverages the innovative Pinata IPFS Web 3 platform to
+        Deductify leverages the innovative <a href="https://pinata.cloud/blog/announcing-the-new-pinata-ipfs-sdk/" target="_blank">Pinata IPFS Web 3</a> platform to
         securely store and manage your financial data. With our user-friendly
         interface, you can easily log, categorize, and track your transactions,
         ensuring you never miss out on valuable deductions when tax season
@@ -28,7 +28,7 @@ const Intro = () => {
           your savings.
         </li>
         <li>
-          <strong>Secure Storage:</strong> Using the Pinata IPFS Web 3 platform,
+          <strong>Secure Storage:</strong> Using the <a href="https://pinata.cloud/blog/announcing-the-new-pinata-ipfs-sdk/" target="_blank">Pinata IPFS Web 3</a> platform,
           your data is securely stored and easily accessible whenever you need
           it.
         </li>
