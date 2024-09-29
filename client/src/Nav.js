@@ -1,24 +1,40 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Route, Routes, Link, useLocation } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Link,
+  useLocation,
+} from "react-router-dom";
 import deductifyLogo from "./assets/deductifyLogo.png";
 import Upload from "./Upload";
 
-const NavComponent = () => {
-  const [openSubNav, setOpenSubNav] = useState(null);
+const NavLinks = () => {
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedSubNav, setSelectedSubNav] = useState(null);
   const location = useLocation();
 
   useEffect(() => {
-    // Set the submenu to open based on the current path
-    const path = location.pathname.split("/")[1]; // Get the first part of the path
-    setOpenSubNav(path || null);
+    const path = location.pathname.split("/");
+    const category = path[1];
+    const subCategory = path[2];
+
+    if (category) {
+      setSelectedCategory(category);
+      setSelectedSubNav(subCategory || null);
+    } else {
+      setSelectedCategory(null);
+      setSelectedSubNav(null);
+    }
   }, [location]);
 
-  const handleMouseEnter = (category) => {
-    setOpenSubNav(category);
+  const handleCategoryClick = (category) => {
+    setSelectedCategory(category);
+    setSelectedSubNav(null);
   };
 
-  const handleMouseLeave = () => {
-    setOpenSubNav(null);
+  const handleSubNavClick = (subCategory) => {
+    setSelectedSubNav(subCategory);
   };
 
   return (
@@ -30,31 +46,45 @@ const NavComponent = () => {
         {["business", "travel", "office", "donations"].map((category) => (
           <li
             key={category}
-            onMouseEnter={() => handleMouseEnter(category)}
-            onMouseLeave={handleMouseLeave}
-            className={openSubNav === category ? "active" : ""}
+            className={selectedCategory === category ? "active" : ""}
           >
-            <Link to={`/${category}`}>{category.charAt(0).toUpperCase() + category.slice(1)}</Link>
-            {openSubNav === category && (
-              <ul className="sub-nav">
-                <li>
-                  <Link to={`/${category}/upload`}>Upload</Link>
-                </li>
-                <li>
-                  <Link to={`/${category}/view`}>View</Link>
-                </li>
-              </ul>
-            )}
+            <Link
+              to={`/${category}`}
+              onClick={() => handleCategoryClick(category)}
+              className={selectedCategory === category ? "active" : ""}
+            >
+              {category.charAt(0).toUpperCase() + category.slice(1)}
+            </Link>
           </li>
         ))}
       </ul>
+      <div className="sub-nav">
+        {selectedCategory && (
+          <>
+            <Link
+              to={`/${selectedCategory}/upload`}
+              className={selectedSubNav === "upload" ? "active" : ""}
+              onClick={() => handleSubNavClick("upload")}
+            >
+              Upload
+            </Link>
+            <Link
+              to={`/${selectedCategory}/view`}
+              className={selectedSubNav === "view" ? "active" : ""}
+              onClick={() => handleSubNavClick("view")}
+            >
+              View
+            </Link>
+          </>
+        )}
+      </div>
     </nav>
   );
 };
 
-const App = () => (
+const Nav = () => (
   <Router>
-    <NavComponent />
+    <NavLinks />
     <Routes>
       <Route path="/business/upload" element={<Upload/>} />
       <Route path="/business/view" element={<div>Business View</div>} />
@@ -70,4 +100,4 @@ const App = () => (
   </Router>
 );
 
-export default App;
+export default Nav;

@@ -1,61 +1,66 @@
 .main-nav {
-    display: flex;
-    justify-content: space-between;
-    padding: 1rem 0;
-    align-items: center;
-    font-size: 24px;
-  }
-  
-  .deductify-logo img {
-    height: 4rem;
-    padding: 1rem;
-  }
-  
-  .nav-list {
-    display: flex;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    justify-content: flex-end;
-  }
-  
-  .main-nav li {
-    margin-left: 2rem;
-    position: relative;
-  }
-  
-  .sub-nav {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background-color: white;
-    padding: 0.5rem;
-    flex-direction: row;
-    gap: 1rem;
-    z-index: 10;
-    list-style: none;
-    border: none;
-  }
-  
-  .main-nav li:hover .sub-nav,
-  .main-nav li.active .sub-nav {
-    display: flex;
-  }
-  
-  .sub-nav li {
-    margin: 0;
-    font-size: 16px !important;
-  }
-  
-  .main-nav a {
-    text-decoration: none;
-    color: green;
-  }
-  
-  .main-nav li.active > a,
-  .sub-nav li a:hover,
-  .sub-nav li.active > a {
-    color: gold;
-  }
-  
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  font-size: 24px;
+}
+
+.deductify-logo {
+  display: block;
+}
+
+.deductify-logo img {
+  height: 4rem;
+  padding: 1rem;
+}
+
+.nav-list {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin-left: auto;
+  margin-right: 2rem;
+  margin-top: -2rem;
+}
+
+.nav-list li a {
+  color: green !important;
+  text-decoration: none;
+}
+
+.nav-list li a:hover {
+  color: gold !important;
+}
+
+.nav-list li a.active {
+  color: gold !important;
+}
+
+.main-nav li {
+  margin-left: 4rem;
+}
+
+.sub-nav {
+  font-size: 18px;
+  display: flex;
+  gap: 2rem;
+  margin-top: 2rem;
+  position: absolute;
+  right: 35%;
+}
+
+.sub-nav a {
+  text-decoration: none;
+  color: green;
+}
+
+.sub-nav a.active {
+  text-decoration: underline;
+  color: green;
+}
+
+.sub-nav li.active > a {
+  text-decoration: underline;
+  color: green;
+}
