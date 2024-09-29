@@ -32,6 +32,7 @@
 .nav-list li a {
   color: green;
   text-decoration: none;
+  text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .active {
@@ -77,7 +78,6 @@
   text-decoration: underline; /* Green underline for active sub-nav items */
 }
 
-/* Ensure sub-nav doesn't hide until explicitly told */
 .nav-item:hover .sub-nav,
 .nav-item:active .sub-nav {
   display: flex;
