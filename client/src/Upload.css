@@ -1,6 +1,41 @@
-.upload-form {
+/* Container holding the two columns */
+.container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+/* Styles for the first column */
+.upload-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.upload-button {
+    padding: 10px 20px;
+    background-color: green;
+    color: white;
+    border: 2px solid green;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.upload-button:hover {
+    background-color: white;
+    color: green;
+}
+
+.black-box {
+    width: 100px;
+    height: 100px;
+    background-color: black;
+}
+
+/* Styles for the form in the second column */
+.form-column {
     width: 300px;
-    margin: 0 auto;
 }
 
 .upload-form h2 {
@@ -25,35 +60,89 @@
     border-radius: 4px;
 }
 
+/* Buttons in the form */
 .buttons {
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
 }
 
-.clear-button {
+/* Shared button styles */
+.clear-button, .save-button {
     padding: 10px 20px;
-    background-color: transparent;
-    border: 2px solid yellow;
-    color: black;
+    color: white;
     cursor: pointer;
     border-radius: 5px;
+}
+
+/* Clear button styles (yellow) */
+.clear-button {
+    background-color: gold;
+    border: 2px solid gold;
+    color: white; /* White text for clear button */
 }
 
 .clear-button:hover {
-    background-color: yellow;
+    background-color: white;
+    color: gold; /* On hover, change text to yellow */
 }
 
+/* Save button styles (green) */
 .save-button {
-    padding: 10px 20px;
-    background-color: transparent;
+    background-color: green;
     border: 2px solid green;
-    color: black;
-    cursor: pointer;
-    border-radius: 5px;
+    color: white;
 }
 
 .save-button:hover {
-    background-color: green;
-    color: white;
+    background-color: white;
+    color: green;
 }
+
+.columns-container {
+    display: flex; /* Use flexbox to create columns */
+    justify-content: space-between;
+    margin-left: 100px;  /* Add left margin to reduce gap */
+    margin-right: 100px; /* Add right margin to reduce gap */
+    gap: 0px; /* Space between columns */
+}
+
+.upload-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px; /* Space between upload button and black box */
+}
+
+.form-column {
+    width: 300px; /* Set width for the form column */
+}
+
+.form-row {
+    display: flex; /* Use flexbox for form rows */
+    align-items: center; /* Align items vertically */
+    margin-bottom: 10px; /* Space between rows */
+}
+
+.form-row label {
+    margin-right: 10px; /* Space between label and input */
+    width: 100px; /* Fixed width for labels */
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.save-button {
+    background-color: green; /* Green when enabled */
+    color: white;
+  }
+  
+  .save-button.disabled {
+    background-color: grey; /* Grey when disabled */
+    cursor: not-allowed;
+  }
+
+
